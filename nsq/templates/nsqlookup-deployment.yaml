@@ -1,0 +1,54 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: 
+  name: {{ template "lookup.name" . }}
+  namespace: {{ .Values.general.namespace }}
+  labels: 
+    app: {{ template "lookup.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name | quote }}
+spec: 
+  replicas: 1
+  template:
+    metadata: 
+      labels:
+        app: {{ template "lookup.name" . }}
+        release: {{ .Release.Name }}
+    spec: 
+      containers: 
+        - name: {{ template "lookup.name" . }}
+          image: {{ .Values.docker.image }}:{{ .Values.docker.tag }}
+          imagePullPolicy: {{ .Values.docker.pullPolicy }}
+          resources: 
+            requests: 
+              cpu: {{ .Values.resources.cpu.requests.lookup | quote }}
+              memory: {{ .Values.resources.memory.requests.lookup | quote }}
+            limits: 
+              cpu: {{ .Values.resources.cpu.limits.lookup | quote }}
+              memory: {{ .Values.resources.memory.limits.lookup | quote }}
+          ports: 
+            - name: http
+              containerPort: {{ .Values.inbound.lookup.http }}
+              hostPort: {{ .Values.inbound.lookup.http }}
+              protocol: TCP
+            - name: tcp
+              containerPort: {{ .Values.inbound.lookup.tcp }}
+              hostPort: {{ .Values.inbound.lookup.tcp }}
+              protocol: TCP
+          readinessProbe: 
+            httpGet: 
+              path: /ping
+              port: http
+            initialDelaySeconds: 10
+          livenessProbe: 
+            httpGet: 
+              path: /ping
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 2
+          command: 
+            - nsqlookupd
+          args: 
+            - "--http-address=0.0.0.0:{{ .Values.inbound.lookup.http }}"
+            - "--tcp-address=0.0.0.0:{{ .Values.inbound.lookup.tcp }}"

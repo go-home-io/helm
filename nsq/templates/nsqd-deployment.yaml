@@ -1,0 +1,55 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: 
+  name: {{ template "nsqd.name" . }}
+  namespace: {{ .Values.general.namespace }}
+  labels: 
+    app: {{ template "nsqd.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name | quote }}
+spec: 
+  replicas: {{ .Values.general.replicas }}
+  template:
+    metadata: 
+      labels:
+        app: {{ template "nsqd.name" . }}
+        release: {{ .Release.Name }}
+    spec: 
+      containers: 
+        - name: {{ template "nsqd.name" . }}
+          image: {{ .Values.docker.image }}:{{ .Values.docker.tag }}
+          imagePullPolicy: {{ .Values.docker.pullPolicy }}
+          resources: 
+            requests: 
+              cpu: {{ .Values.resources.cpu.requests.nsqd | quote }}
+              memory: {{ .Values.resources.memory.requests.nsqd | quote }}
+            limits: 
+              cpu: {{ .Values.resources.cpu.limits.nsqd | quote }}
+              memory: {{ .Values.resources.memory.limits.nsqd | quote }}
+          ports: 
+            - name: http
+              containerPort: {{ .Values.inbound.nsqd.http }}
+              hostPort: {{ .Values.inbound.nsqd.http }}
+              protocol: TCP
+            - name: tcp
+              containerPort: {{ .Values.inbound.nsqd.tcp }}
+              hostPort: {{ .Values.inbound.nsqd.tcp }}
+              protocol: TCP
+          readinessProbe: 
+            httpGet: 
+              path: /ping
+              port: http
+            initialDelaySeconds: 10
+          livenessProbe: 
+            httpGet: 
+              path: /ping
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 2
+          command: 
+            - nsqd
+          args: 
+            - "--http-address=0.0.0.0:{{ .Values.inbound.nsqd.http }}"
+            - "--tcp-address=0.0.0.0:{{ .Values.inbound.nsqd.tcp }}"
+            - "--lookupd-tcp-address={{ template "lookup.name" . }}.{{ .Values.general.namespace }}.svc.{{ .Values.inbound.clusterNS }}:{{ .Values.inbound.lookup.tcp }}"

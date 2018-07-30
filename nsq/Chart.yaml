@@ -1,0 +1,7 @@
+name: nsq
+version: 1.0.0
+description: NSQ service bus
+keywords:
+  - infra
+maintainers:
+  - name: go-home
