@@ -1,0 +1,6 @@
+NSQ is ready, use the following configuration file: 
+
+system: bus
+provider: nsq
+lookup: {{ template "lookup.name" . }}.{{ .Values.general.namespace }}.svc.{{ .Values.inbound.clusterNS }}:{{ .Values.inbound.lookup.http }}
+server: {{ template "nsqd.name" . }}.{{ .Values.general.namespace }}.svc.{{ .Values.inbound.clusterNS }}:{{ .Values.inbound.nsqd.tcp }}

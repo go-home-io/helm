@@ -24,5 +24,4 @@ COPY --from=build /opt/nsq/bin/nsqd \
 	/opt/nsq/bin/nsqadmin \
 	/opt/nsq/bin/nsqlookupd /usr/local/bin/
 
-RUN ln -s /usr/local/bin/*nsq* / && \
- 	ln -s /usr/local/bin/*nsq* /bin/
+RUN ln -s /usr/local/bin/*nsq* /
