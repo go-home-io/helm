@@ -16,17 +16,17 @@ GOARCH=
 VERSION=ChangeMe
 
 PS3='Select image:'
-options=("nsq" "volantmq" "Quit")
+options=("nsq" "volantmq" "smartthings" "Quit")
 select opt in "${options[@]}"
 do 
 	targe_dir=$opt
+	IMG_NAME=$opt
 	case $opt in 
 		"nsq")
 			img_build=(golang:1.10.3-alpine3.8 
 				arm32v6/golang:1.10.3-alpine3.8)
 			img_run=(alpine:3.8 
 				arm32v6/alpine:3.8)
-			IMG_NAME=nsq
 			VERSION=1.0.0
 		break
 		;;
@@ -35,7 +35,13 @@ do
 				arm32v6/golang:1.10.3-alpine3.8)
 			img_run=(alpine:3.8 
 				arm32v6/alpine:3.8)
-			IMG_NAME=volantmq
+			VERSION=1.0.0
+		break
+		;;
+		"smartthings")
+			img_build=(nil nil)
+			img_run=(node:10.7.0-alpine 
+				arm32v6/node:9.6.1-alpine)
 			VERSION=1.0.0
 		break
 		;;
