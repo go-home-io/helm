@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: ConfigMap
+metadata: 
+  name: {{ template "volantmq.name" . }}
+  namespace: {{ .Values.general.namespace }}
+  labels: 
+    app: {{ template "volantmq.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name | quote }}
+data: 
+  volantmq.yaml: |-
+    version: v0.0.1
+    system:
+      log:
+        console:
+          timestamp:
+            format: RFC3339
+          level: info
+      http:
+        defaultPort: {{ .Values.inbound.http }}
+    plugins:
+      enabled:
+      - health
+      config:
+        health:
+          - backend: health
+            config:
+              livenessEndpoint: live
+              readinessEndpoint: ready
+        auth:                   
+          - name: internal 
+            backend: simpleAuth
+            config:
+              users:
+                {{- range $key, $val := .Values.auth }}
+                {{ $key }}: {{ $val | sha256sum | quote }}
+                {{- end }}
+    auth:
+      anonymous: false
+      order:
+        - internal
+    mqtt:
+      version:
+      - v3.1.1
+      - v3.1
+      - v5.0
+      keepAlive:
+        period: 60 
+        force: false
+      systree:
+        enabled: true
+        updateInterval: 10
+      options:
+        connectTimeout: 5 
+        offlineQoS0: true 
+        sessionDups: true 
+        retainAvailable: true
+        subsOverlap: false   
+        subsId: false      
+        subsShared: false  
+        subsWildcard: true 
+        receiveMax: 65530  
+        maxPacketSize: 268435455 
+        maxTopicAlias: 65535    
+        maxQoS: 2
+    listeners:
+      defaultAddr: "0.0.0.0"
+      mqtt:
+        tcp:
+          {{ .Values.inbound.mqtt }}:
+            auth:

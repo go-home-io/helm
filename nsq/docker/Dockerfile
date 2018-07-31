@@ -4,6 +4,11 @@ FROM $BUILD_IMAGE AS build
 
 ENV COMMIT_HASH=8f3e47656ed54febe380486c0189c72af1bc9356
 
+ENV GOOS=linux
+
+ARG GOARCH
+ENV GOARCH=$GOARCH
+
 RUN apk update && apk add git make && \
 	mkdir -p /go/src/github.com/nsqio && \
 	cd /go/src/github.com/nsqio && \

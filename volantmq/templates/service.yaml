@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata: 
+  name: {{ template "volantmq.name" . }}
+  namespace: {{ .Values.general.namespace }}
+  labels: 
+    app: {{ template "volantmq.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name | quote }}
+spec:
+  type: {{ .Values.inbound.type }}
+  selector: 
+    app: {{ template "volantmq.name" . }}
+    release: {{ .Release.Name }}
+  ports: 
+    - name: mqtt
+      port: {{ .Values.inbound.mqtt }}
+      targetPort: mqtt

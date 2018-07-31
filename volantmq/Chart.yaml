@@ -1,0 +1,7 @@
+name: volantmq
+version: 1.0.0
+description: volantmq MQTT broker
+keywords:
+  - mqtt
+maintainers:
+  - name: go-home

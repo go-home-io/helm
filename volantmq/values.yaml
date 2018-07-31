@@ -1,0 +1,24 @@
+general: 
+  namespace: default
+
+docker: 
+  image: gohomeio/volantmq
+  tag: 1.0.0
+  pullPolicy: IfNotPresent
+
+resources: 
+  cpu: 
+    requests: 100m
+    limits: 100m
+  memory: 
+    requests: 40Mi
+    limits: 60Mi
+
+inbound: 
+  http: 8080
+  mqtt: 1883
+  type: ClusterIP
+  clusterNS: cluster.local
+
+auth:
+  gohome: password

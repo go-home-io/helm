@@ -1,0 +1,59 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: 
+  name: {{ template "volantmq.name" . }}
+  namespace: {{ .Values.general.namespace }}
+  labels: 
+    app: {{ template "volantmq.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name | quote }}
+spec: 
+  replicas: 1
+  template:
+    metadata: 
+      labels:
+        app: {{ template "volantmq.name" . }}
+        release: {{ .Release.Name }}
+    spec: 
+      volumes: 
+        - name: config
+          configMap: 
+            name: {{ template "volantmq.name" . }}
+      containers: 
+        - name: {{ template "volantmq.name" . }}
+          image: {{ .Values.docker.image }}:{{ .Values.docker.tag }}
+          imagePullPolicy: {{ .Values.docker.pullPolicy }}
+          resources: 
+            requests: 
+              cpu: {{ .Values.resources.cpu.requests | quote }}
+              memory: {{ .Values.resources.memory.requests | quote }}
+            limits: 
+              cpu: {{ .Values.resources.cpu.limits | quote }}
+              memory: {{ .Values.resources.memory.limits | quote }}
+          ports: 
+            - name: http
+              containerPort: {{ .Values.inbound.http }}
+              hostPort: {{ .Values.inbound.http }}
+              protocol: TCP
+            - name: mqtt
+              containerPort: {{ .Values.inbound.mqtt }}
+              hostPort: {{ .Values.inbound.mqtt }}
+              protocol: TCP
+          readinessProbe: 
+            httpGet: 
+              path: /health/ready
+              port: http
+            initialDelaySeconds: 10
+          livenessProbe: 
+            httpGet: 
+              path: /health/live
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 2
+          volumeMounts:
+            - name: config
+              mountPath: /config
+          env: 
+            - name: VOLANTMQ_CONFIG
+              value: /config/volantmq.yaml

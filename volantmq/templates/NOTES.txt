@@ -1,0 +1,13 @@
+VolantMQ is ready, use the following configuration options:
+
+NOTE: Select only one set of credentials. 
+Consider using secrets!
+
+system: device
+provider: hub/mqtt
+{{- range $key, $val := .Values.auth }}
+login: {{ $key }}
+password: {{ $val }}
+{{- end }}
+clientID: gohome
+broker: {{ template "volantmq.name" . }}.{{ .Values.general.namespace }}.svc.{{ .Values.inbound.clusterNS }}:{{ .Values.inbound.mqtt }}

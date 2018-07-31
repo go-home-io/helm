@@ -1,4 +1,4 @@
-NSQ is ready, use the following configuration file: 
+NSQ is ready, use the following configuration options: 
 
 system: bus
 provider: nsq
