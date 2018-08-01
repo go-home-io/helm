@@ -1,0 +1,9 @@
+SmartThings hub is ready.
+
+Assuming you're using MetalLB, to get an IP run: 
+
+IP=$(kubectl get svc {{ template "smartthings.name" . }} -n {{ .Values.general.namespace }} | awk -F ' ' 'NR==2{ print $4 }') && echo $IP
+
+To get MAC address run: 
+
+arping -C 1 $IP

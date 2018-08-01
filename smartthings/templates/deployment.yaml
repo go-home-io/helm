@@ -1,0 +1,64 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: 
+  name: {{ template "smartthings.name" . }}
+  namespace: {{ .Values.general.namespace }}
+  labels: 
+    app: {{ template "smartthings.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name | quote }}
+spec: 
+  replicas: 1
+  template:
+    metadata: 
+      labels:
+        app: {{ template "smartthings.name" . }}
+        release: {{ .Release.Name }}
+    spec: 
+      nodeSelector:
+        {{- range $key, $val := .Values.general.nodeSelector }}
+        {{ $key }}: {{ $val | quote }}
+        {{- end }}
+      volumes: 
+        - name: config
+          configMap: 
+            name: {{ template "smartthings.name" . }}
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ template "smartthings.name" . }}
+      containers: 
+        - name: {{ template "smartthings.name" . }}
+          image: {{ .Values.docker.image }}:{{ .Values.docker.tag }}
+          imagePullPolicy: {{ .Values.docker.pullPolicy }}
+          resources: 
+            requests: 
+              cpu: {{ .Values.resources.cpu.requests | quote }}
+              memory: {{ .Values.resources.memory.requests | quote }}
+            limits: 
+              cpu: {{ .Values.resources.cpu.limits | quote }}
+              memory: {{ .Values.resources.memory.limits | quote }}
+          ports: 
+            - name: inb
+              containerPort: {{ .Values.inbound.port }}
+              hostPort: {{ .Values.inbound.port }}
+              protocol: TCP
+          readinessProbe: 
+            tcpSocket: 
+              port: inb
+            initialDelaySeconds: 10
+          livenessProbe: 
+            tcpSocket: 
+              port: inb
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 2
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: data
+              mountPath: /mount
+          env: 
+            - name: MOUNT_CFG
+              value: /config
+            - name: MOUNT_VOL
+              value: /mount

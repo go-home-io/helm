@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata: 
+  name: {{ template "smartthings.name" . }}
+  namespace: {{ .Values.general.namespace }}
+  labels: 
+    app: {{ template "smartthings.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name | quote }}
+data: 
+  config.yml: |-
+    ---
+    mqtt:
+        host: mqtt://{{ .Values.app.mqtt.host }}
+        preface: {{ .Values.app.preface }}
+        
+        {{- if .Values.app.suffix.state.read}}
+        state_read_suffix: {{ .Values.app.suffix.state.read }}
+        {{- end }}
+
+        {{- if .Values.app.suffix.state.write }}
+        state_write_suffix: {{ .Values.app.suffix.state.write }}
+        {{- end }}
+
+        {{- if .Values.app.suffix.cmd }}
+        command_suffix: {{ .Values.app.suffix.cmd }}
+        {{- end }}
+
+        username: {{ .Values.app.mqtt.username }}
+        password: {{ .Values.app.mqtt.password }}
+        clientId: smartthings
+    port: {{ .Values.inbound.port }}

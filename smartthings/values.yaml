@@ -1,0 +1,33 @@
+general: 
+  namespace: default
+  nodeSelector:
+    static: true
+
+docker: 
+  image: gohomeio/smartthings
+  tag: 1.0.0
+  pullPolicy: IfNotPresent
+
+app: 
+  mqtt: 
+    host: volantmq.default.svc.cluster.local:1883
+    username: gohome
+    password: password
+  preface: smartthings
+  suffix:
+    state: 
+      read:
+      write:
+    cmd:
+
+resources: 
+  cpu: 
+    requests: 100m
+    limits: 100m
+  memory: 
+    requests: 40Mi
+    limits: 60Mi
+
+inbound:
+  port: 8081
+  type: LoadBalancer

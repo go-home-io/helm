@@ -1,0 +1,7 @@
+name: smartthings
+version: 1.0.0
+description: SmartThings connector
+keywords:
+  - samsung
+maintainers:
+  - name: go-home
