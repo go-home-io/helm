@@ -14,26 +14,33 @@ before_script:
   - /tmp/helm init --client-only
 
 script:
-  - export REPO=`git config remote.origin.url`
-  - export SSH_REPO=${REPO/https:\/\/github.com\//git@github.com:}
-  - export SHA=`git rev-parse --verify HEAD`
   - |
+    set -e
+    export REPO=$(git config remote.origin.url)
+    export SSH_REPO=${REPO/https:\/\/github.com\//git@github.com:}
+
+    git clone $REPO out
+    cd out
+    git checkout gh-pages
+    rm -f *.tgz
+    rm -f index.yaml
+    cd ..
+
+    export SHA=$(git rev-parse --verify HEAD)
     for chart in *; do
       if [ -d ${chart} ]; then
-        helm package ${chart}
+        /tmp/helm package ${chart}
       fi;
     done;
-  - mkdir -p /tmp/charts
-  - mv ./*.tgz /tmp/charts
-  - git checkout gh-pages
-  - rm -f *.tgz
-  - rm -f index.yaml
-  - mv /tmp/charts/*.tgz .
-  - helm repo index . --url https://apps.go-home.io
-  - git config user.name "Travis CI"
-  - git config user.email "$COMMIT_AUTHOR_EMAIL"
-  - git add -A .
-  - git commit -m "Deploy to go-home apps: ${SHA}"
-  - openssl aes-256-cbc -K $encrypted_47ce3df85097_key -iv $encrypted_47ce3df85097_iv -in travis_id_rsa.enc -out ~/.ssh/id_rsa -d
-  - chmod 600 ~/.ssh/travis_id_rsa -d
-  - git push $SSH_REPO gh-pages
+
+    mv ./*.tgz ./out
+    cd out
+    /tmp/helm repo index . --url https://apps.go-home.io
+
+    git config user.name "Travis CI"
+    git config user.email "$COMMIT_AUTHOR_EMAIL"
+    git add -A .
+    git commit -m "Deploy to go-home apps: ${SHA}"
+    openssl aes-256-cbc -K $encrypted_47ce3df85097_key -iv $encrypted_47ce3df85097_iv -in travis_id_rsa.enc -out ~/.ssh/id_rsa -d
+    chmod 600 ~/.ssh/travis_id_rsa -d
+    git push $SSH_REPO gh-pages
