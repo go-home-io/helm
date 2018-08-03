@@ -1,0 +1,39 @@
+apiVersion: v1
+entries:
+  nsq:
+  - created: 2018-08-03T20:00:57.159434997Z
+    description: NSQ service bus
+    digest: 7d77999b8b412b898dbf1c4f50b8bc073de0c59d032e2522f8df29dbdf75651b
+    keywords:
+    - infra
+    maintainers:
+    - name: go-home
+    name: nsq
+    urls:
+    - https://apps.go-home.io/nsq-1.0.0.tgz
+    version: 1.0.0
+  smartthings:
+  - created: 2018-08-03T20:00:57.160028275Z
+    description: SmartThings connector
+    digest: e908448cbbea26ff2c3248c0e1cc42d98cfff33a9e88ddbcd8c16339e2bd6aa1
+    keywords:
+    - samsung
+    maintainers:
+    - name: go-home
+    name: smartthings
+    urls:
+    - https://apps.go-home.io/smartthings-1.0.0.tgz
+    version: 1.0.0
+  volantmq:
+  - created: 2018-08-03T20:00:57.160461324Z
+    description: volantmq MQTT broker
+    digest: d73f2185bbd4084c431b311ff5845957d78fa9691906aa23343148bedc52ad31
+    keywords:
+    - mqtt
+    maintainers:
+    - name: go-home
+    name: volantmq
+    urls:
+    - https://apps.go-home.io/volantmq-1.0.0.tgz
+    version: 1.0.0
+generated: 2018-08-03T20:00:57.158938081Z
