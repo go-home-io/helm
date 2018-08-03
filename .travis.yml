@@ -18,14 +18,6 @@ script:
     set -e
     export REPO=$(git config remote.origin.url)
     export SSH_REPO=${REPO/https:\/\/github.com\//git@github.com:}
-
-    git clone $REPO out
-    cd out
-    git checkout gh-pages
-    rm -f *.tgz
-    rm -f index.yaml
-    cd ..
-
     export SHA=$(git rev-parse --verify HEAD)
     for chart in *; do
       if [ -d ${chart} ]; then
@@ -33,8 +25,13 @@ script:
       fi;
     done;
 
-    mv ./*.tgz ./out
+    git clone $REPO out
     cd out
+    git checkout gh-pages
+    rm -f *.tgz
+    rm -f index.yaml
+    mv ../*.tgz ./out
+
     /tmp/helm repo index . --url https://apps.go-home.io
 
     git config user.name "Travis CI"
