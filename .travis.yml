@@ -1,5 +1,7 @@
 language: generic
 sudo: false
+git:
+  depth: 3
 branches:
   only:
     - master
