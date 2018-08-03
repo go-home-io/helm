@@ -1,0 +1,21 @@
+{{- if .Values.general.rbacEnabled }}
+
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata: 
+  name: {{ template "go-home.name" . }}
+  namespace: {{ .Values.general.namespace }}
+  labels: 
+    app: {{ template "go-home.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name | quote }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ template "go-home.name" . }}
+    namespace: {{ .Values.general.namespace }}
+roleRef:
+  kind: Role
+  name: {{ template "go-home.name" . }}
+  apiGroup: ""
+
+{{- end }}

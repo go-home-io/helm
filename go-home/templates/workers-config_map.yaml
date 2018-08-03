@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata: 
+  name: {{ template "go-home.worker.name" . }}
+  namespace: {{ .Values.general.namespace }}
+  labels: 
+    app: {{ template "go-home.worker.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name | quote }}
+data: 
+  config.yaml: |-
+    system: go-home
+    provider: worker
+    name: workerName
+    properties:
+    {{- range $key, $val := .Values.workersProperties }}
+      {{ $key }}: {{ $val }}
+    {{- end }}
+
+    ---
+    {{- if .Values.serviceBusConfig }}
+    {{ toYaml .Values.serviceBusConfig | trimSuffix "\n" | nindent 4 }}
+    {{- end }}
+  start.sh: |-
+    set -e 
+    mkdir -p $HOME_DIR/configs
+    cp -f /config/*.yaml $HOME_DIR/configs/
+    cd $HOME_DIR
+    name=$(hostname)
+    sed -i s/workerName/${name}/ configs/config.yaml
+    ./go-home -w -c location:$HOME_DIR/configs -s provider:k8s -s secret:{{ .Values.general.namespace }}/{{ template "go-home.name" . }} --plugins=/plugins

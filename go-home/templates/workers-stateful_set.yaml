@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata: 
+  name: {{ template "go-home.worker.name" . }}
+  namespace: {{ .Values.general.namespace }}
+  labels: 
+    app: {{ template "go-home.worker.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name | quote }}
+spec: 
+  selector:
+    matchLabels:
+      app: {{ template "go-home.worker.name" . }}
+  replicas: {{ .Values.general.workerReplicas }}
+  template:
+    metadata: 
+      labels:
+        app: {{ template "go-home.worker.name" . }}
+        release: {{ .Release.Name }}
+    spec: 
+{{- if .Values.general.rbacEnabled }}
+      serviceAccountName: {{ template "go-home.name" . }}
+{{- end }}
+      volumes: 
+        - name: plugins
+          persistentVolumeClaim:
+            claimName: {{ template "go-home.name" . }}
+        - name: config
+          configMap: 
+            name: {{ template "go-home.worker.name" . }}
+      containers: 
+        - name: {{ template "go-home.worker.name" . }}
+          image: {{ .Values.docker.image }}:{{ .Values.docker.tag }}
+          imagePullPolicy: {{ .Values.docker.pullPolicy }}
+          resources: 
+            requests: 
+              cpu: {{ .Values.resources.cpu.requests | quote }}
+              memory: {{ .Values.resources.memory.requests | quote }}
+            limits: 
+              cpu: {{ .Values.resources.cpu.limits | quote }}
+              memory: {{ .Values.resources.memory.limits | quote }}
+          volumeMounts: 
+            - name: plugins
+              mountPath: /plugins
+            - name: config
+              mountPath: /config
+          command: 
+            - "/bin/sh"
+          args: 
+            - "-c"
+            - "cp /config/start.sh /start.sh && chmod +x /start.sh && /start.sh"

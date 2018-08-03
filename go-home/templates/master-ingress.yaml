@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "go-home.master.name" . }}
+  namespace: {{ .Values.general.namespace }}
+  labels: 
+    app: {{ template "go-home.master.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name | quote }}
+  annotations:
+    {{- range $key, $val := .Values.inbound.ingressAnnotations }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+spec: 
+  rules: 
+    - http: 
+      paths: 
+        - backend: 
+          serviceName: {{ template "go-home.master.name" . }}
+          servicePort: 80
+      {{- if .Values.inbound.host }}
+      host: {{ .Values.inbound.host }}
+      {{- end }}

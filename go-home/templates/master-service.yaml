@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata: 
+  name: {{ template "go-home.master.name" . }}
+  namespace: {{ .Values.general.namespace }}
+  labels: 
+    app: {{ template "go-home.master.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name | quote }}
+spec:
+  type: ClusterIP
+  selector: 
+    app: {{ template "go-home.master.name" . }}
+    release: {{ .Release.Name }}
+  ports: 
+    - port: {{ .Values.inbound.master }}
+      targetPort: http

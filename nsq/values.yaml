@@ -1,6 +1,5 @@
 general: 
   namespace: default
-  replicas: 1
 
 docker: 
   image: gohomeio/nsq
@@ -9,25 +8,13 @@ docker:
 
 resources: 
   cpu: 
-    requests:
-      lookup: 100m
-      nsqd: 100m
-    limits: 
-      lookup: 100m
-      nsqd: 100m
+    requests: 100m
+    limits: 100m
   memory: 
-    requests:
-      lookup: 20Mi
-      nsqd: 20Mi
-    limits:
-      lookup: 30Mi
-      nsqd: 30Mi
+    requests: 20Mi
+    limits: 30Mi
 
 inbound: 
   clusterNS: cluster.local
-  lookup: 
-    tcp: 4160
-    http: 4161
-  nsqd: 
-    tcp: 4150
-    http: 4151
+  tcp: 4150
+  http: 4151

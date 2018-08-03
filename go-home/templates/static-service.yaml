@@ -1,0 +1,23 @@
+{{- if .Values.staticWorker.enabled }}
+
+apiVersion: v1
+kind: Service
+metadata: 
+  name: {{ template "go-home.worker.static.name" . }}
+  namespace: {{ .Values.general.namespace }}
+  labels: 
+    app: {{ template "go-home.worker.static.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name | quote }}
+spec:
+  type: {{ .Values.inbound.type }}
+  selector: 
+    app: {{ template "go-home.worker.static.name" . }}
+    release: {{ .Release.Name }}
+  ports: 
+  {{- range .Values.inbound.static }}
+    - port: {{ . }}
+      targetPort: {{ . }}
+  {{- end }}
+
+{{- end }}

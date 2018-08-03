@@ -1,0 +1,27 @@
+{{- if .Values.staticWorker.enabled }}
+
+apiVersion: v1
+kind: ConfigMap
+metadata: 
+  name: {{ template "go-home.worker.static.name" . }}
+  namespace: {{ .Values.general.namespace }}
+  labels: 
+    app: {{ template "go-home.worker.static.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name | quote }}
+data: 
+  config.yaml: |-
+    system: go-home
+    provider: worker
+    name: worker-static
+    properties:
+    {{- range $key, $val := .Values.staticWorkerProperties }}
+      {{ $key }}: {{ $val }}
+    {{- end }}
+
+    ---
+    {{- if .Values.serviceBusConfig }}
+    {{ toYaml .Values.serviceBusConfig | trimSuffix "\n" | nindent 4 }}
+    {{- end }}
+
+{{- end }}

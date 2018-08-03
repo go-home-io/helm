@@ -1,0 +1,41 @@
+general: 
+  rbacEnabled: true
+  namespace: default
+  workerReplicas: 2
+  masterConfigMap: go-home
+
+docker: 
+  image: gohomeio/server
+  tag: 0.0.3
+  pullPolicy: IfNotPresent
+
+resources: 
+  cpu: 
+    requests: 120m
+    limits: 130m
+  memory: 
+    requests: 60Mi
+    limits: 120Mi
+
+inbound: 
+  http: 8080
+
+serviceBusConfig: {}
+workersProperties: {}
+staticWorkerProperties: {}
+users: {}
+
+staticWorker: 
+  enabled: false
+  nodeSelector:
+    static: true
+
+inbound:
+  static: 
+    - 5000
+  type: LoadBalancer
+  master: 8000
+  host: ""
+  ingressAnnotations: 
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: true

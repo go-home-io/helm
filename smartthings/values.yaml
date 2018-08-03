@@ -16,9 +16,9 @@ app:
   preface: smartthings
   suffix:
     state: 
-      read:
-      write:
-    cmd:
+      read: ""
+      write: ""
+    cmd: ""
 
 resources: 
   cpu: 

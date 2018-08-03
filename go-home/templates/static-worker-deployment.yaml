@@ -1,0 +1,65 @@
+{{- if .Values.staticWorker.enabled }}
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: 
+  name: {{ template "go-home.worker.static.name" . }}
+  namespace: {{ .Values.general.namespace }}
+  labels: 
+    app: {{ template "go-home.worker.static.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name | quote }}
+spec: 
+  replicas: 1
+  template:
+    metadata: 
+      labels:
+        app: {{ template "go-home.worker.static.name" . }}
+        release: {{ .Release.Name }}
+    spec: 
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+{{- if .Values.general.rbacEnabled }}
+      serviceAccountName: {{ template "go-home.name" . }}
+{{- end }}
+      nodeSelector:
+        {{- range $key, $val := .Values.staticWorker.nodeSelector }}
+        {{ $key }}: {{ $val | quote }}
+        {{- end }}
+      volumes: 
+        - name: plugins
+          persistentVolumeClaim:
+            claimName: {{ template "go-home.name" . }}
+      containers: 
+        - name: {{ template "go-home.worker.static.name" . }}
+          image: {{ .Values.docker.image }}:{{ .Values.docker.tag }}
+          imagePullPolicy: {{ .Values.docker.pullPolicy }}
+          resources: 
+            requests: 
+              cpu: {{ .Values.resources.cpu.requests | quote }}
+              memory: {{ .Values.resources.memory.requests | quote }}
+            limits: 
+              cpu: {{ .Values.resources.cpu.limits | quote }}
+              memory: {{ .Values.resources.memory.limits | quote }}
+          ports:
+          {{- range .Values.inbound.static }}
+            - containerPort: {{ . }}
+              hostPort: {{ . }}
+              protocol: TCP
+          {{- end }}
+          volumeMounts: 
+            - name: plugins
+              mountPath: /plugins
+          command: 
+            - /bin/sh
+          args:
+            - "-c"
+            - |
+              /go-home/go-home -w \
+              -c provider:k8s \
+              -c config-map:{{ .Values.general.namespace }}/{{ template "go-home.worker.static.name" . }} \
+              -s provider:k8s \
+              -s secret:{{ .Values.general.namespace }}/{{ template "go-home.name" . }} \
+              --plugins=/plugins
+
+{{- end }}

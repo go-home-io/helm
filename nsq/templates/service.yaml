@@ -14,8 +14,8 @@ spec:
     release: {{ .Release.Name }}
   ports: 
     - name: http
-      port: {{ .Values.inbound.nsqd.http }}
+      port: {{ .Values.inbound.http }}
       targetPort: http
     - name: tcp
-      port: {{ .Values.inbound.nsqd.tcp }}
+      port: {{ .Values.inbound.tcp }}
       targetPort: tcp

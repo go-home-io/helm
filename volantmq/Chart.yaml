@@ -1,6 +1,6 @@
 name: volantmq
 version: 1.0.0
-description: volantmq MQTT broker
+description: VolantMQ MQTT broker
 keywords:
   - mqtt
 maintainers:

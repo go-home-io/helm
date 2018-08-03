@@ -8,7 +8,7 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: {{ .Release.Name | quote }}
 spec: 
-  replicas: {{ .Values.general.replicas }}
+  replicas: 1
   template:
     metadata: 
       labels:
@@ -21,19 +21,19 @@ spec:
           imagePullPolicy: {{ .Values.docker.pullPolicy }}
           resources: 
             requests: 
-              cpu: {{ .Values.resources.cpu.requests.nsqd | quote }}
-              memory: {{ .Values.resources.memory.requests.nsqd | quote }}
+              cpu: {{ .Values.resources.cpu.requests | quote }}
+              memory: {{ .Values.resources.memory.requests | quote }}
             limits: 
-              cpu: {{ .Values.resources.cpu.limits.nsqd | quote }}
-              memory: {{ .Values.resources.memory.limits.nsqd | quote }}
+              cpu: {{ .Values.resources.cpu.limits | quote }}
+              memory: {{ .Values.resources.memory.limits | quote }}
           ports: 
             - name: http
-              containerPort: {{ .Values.inbound.nsqd.http }}
-              hostPort: {{ .Values.inbound.nsqd.http }}
+              containerPort: {{ .Values.inbound.http }}
+              hostPort: {{ .Values.inbound.http }}
               protocol: TCP
             - name: tcp
-              containerPort: {{ .Values.inbound.nsqd.tcp }}
-              hostPort: {{ .Values.inbound.nsqd.tcp }}
+              containerPort: {{ .Values.inbound.tcp }}
+              hostPort: {{ .Values.inbound.tcp }}
               protocol: TCP
           readinessProbe: 
             httpGet: 
@@ -50,6 +50,6 @@ spec:
           command: 
             - nsqd
           args: 
-            - "--http-address=0.0.0.0:{{ .Values.inbound.nsqd.http }}"
-            - "--tcp-address=0.0.0.0:{{ .Values.inbound.nsqd.tcp }}"
-            - "--lookupd-tcp-address={{ template "lookup.name" . }}.{{ .Values.general.namespace }}.svc.{{ .Values.inbound.clusterNS }}:{{ .Values.inbound.lookup.tcp }}"
+            - "--http-address=0.0.0.0:{{ .Values.inbound.http }}"
+            - "--tcp-address=0.0.0.0:{{ .Values.inbound.tcp }}"
+            - "--broadcast-address={{ template "nsqd.name" . }}.{{ .Values.general.namespace }}.svc.{{ .Values.inbound.clusterNS }}"
