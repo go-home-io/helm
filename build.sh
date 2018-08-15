@@ -35,7 +35,7 @@ do
 				arm32v6/golang:1.10.3-alpine3.8)
 			img_run=(alpine:3.8 
 				arm32v6/alpine:3.8)
-			VERSION=1.0.0
+			VERSION=1.1.0
 		break
 		;;
 		"smartthings")
@@ -95,6 +95,6 @@ do
 done
 
 cd ${targe_dir}/docker
-docker build -t $IMG_NAME:$ARCH-${VERSION} --build-arg BUILD_IMAGE=${BUILD_IMAGE} \
+docker build --no-cache -t $IMG_NAME:$ARCH-${VERSION} --build-arg BUILD_IMAGE=${BUILD_IMAGE} \
 	--build-arg RUN_IMAGE=${RUN_IMAGE} --build-arg GOARCH=${GOARCH} .
 docker push $IMG_NAME:$ARCH-${VERSION}

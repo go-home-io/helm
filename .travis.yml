@@ -29,9 +29,9 @@ script:
     git clone $REPO out
     cd out
     git checkout gh-pages
-    rm -f *.tgz
-    rm -f index.yaml
-    mv ../*.tgz .
+    # rm -f *.tgz
+    # rm -f index.yaml
+    mv -f ../*.tgz .
 
     /tmp/helm repo index . --url https://apps.go-home.io
 
