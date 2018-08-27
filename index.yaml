@@ -1,9 +1,9 @@
 apiVersion: v1
 entries:
   go-home:
-  - created: 2018-08-15T02:11:59.960949546Z
+  - created: 2018-08-27T00:07:19.872485651Z
     description: go-home server
-    digest: 22145ecc8def6ab2df07f3de006d1afec6aceaa7a0bec4d1a7257e414c28ea0d
+    digest: 43fb99fe91e37cd16de3d3d01904dfed79462cb8eb83a75ffb8ac1fabc0b6aa0
     keywords:
     - go-home
     maintainers:
@@ -12,8 +12,20 @@ entries:
     urls:
     - https://apps.go-home.io/go-home-0.0.1.tgz
     version: 0.0.1
+  influxdb:
+  - created: 2018-08-27T00:07:19.873018267Z
+    description: InfluxDB database
+    digest: b154ae682d05e1dd5b67ca2d5e36090e8f598274d71830378a4d00672519b8cf
+    keywords:
+    - storage
+    maintainers:
+    - name: go-home
+    name: influxdb
+    urls:
+    - https://apps.go-home.io/influxdb-1.0.0.tgz
+    version: 1.0.0
   nsq:
-  - created: 2018-08-15T02:11:59.96135371Z
+  - created: 2018-08-27T00:07:19.873410217Z
     description: NSQ service bus
     digest: 4721dd0e116702799b3b5ea95c1dbccee7bb9b1fd2b250bd6a44f4980499a551
     keywords:
@@ -25,7 +37,7 @@ entries:
     - https://apps.go-home.io/nsq-1.0.0.tgz
     version: 1.0.0
   smartthings:
-  - created: 2018-08-15T02:11:59.961824285Z
+  - created: 2018-08-27T00:07:19.873846739Z
     description: SmartThings connector
     digest: 9a24fe2999a3f2d7237af61749cd5ad381bd260339ce41e6e0fbdc4068507c17
     keywords:
@@ -37,7 +49,7 @@ entries:
     - https://apps.go-home.io/smartthings-1.0.0.tgz
     version: 1.0.0
   volantmq:
-  - created: 2018-08-15T02:11:59.962695995Z
+  - created: 2018-08-27T00:07:19.874622787Z
     description: VolantMQ MQTT broker
     digest: 7d26c47a828c58666fc3a10486459839eacba62425e081d0d844759ce152a9f4
     keywords:
@@ -48,7 +60,7 @@ entries:
     urls:
     - https://apps.go-home.io/volantmq-1.1.0.tgz
     version: 1.1.0
-  - created: 2018-08-15T02:11:59.962278232Z
+  - created: 2018-08-27T00:07:19.874209828Z
     description: VolantMQ MQTT broker
     digest: 27d9519b7715e8833a2c96842bbae802bdb9b54737c7b7b43c84d95d225acd98
     keywords:
@@ -59,4 +71,4 @@ entries:
     urls:
     - https://apps.go-home.io/volantmq-1.0.0.tgz
     version: 1.0.0
-generated: 2018-08-15T02:11:59.960024117Z
+generated: 2018-08-27T00:07:19.871945379Z
