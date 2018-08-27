@@ -1,0 +1,31 @@
+nameOverride: ""
+
+general: 
+  namespace: default
+  storageSize: 2Gi
+
+db: 
+  name: gohome
+
+inbound: 
+  port: 8086
+  type: ClusterIP
+  clusterNS: cluster.local
+
+docker: 
+  isArm: true
+  imageAmd: "influxdb:1.6.1-alpine"
+  imageArm: "arm32v7/influxdb:1.6.1"
+  pullPolicy: IfNotPresent
+
+user: 
+  login: ""
+  password: ""
+
+resources: 
+  cpu: 
+    requests: 200m
+    limits: 400m
+  memory: 
+    requests: 256Mi
+    limits: 512Mi

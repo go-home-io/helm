@@ -1,0 +1,7 @@
+name: influxdb
+version: 1.0.0
+description: InfluxDB database
+keywords:
+  - storage
+maintainers:
+  - name: go-home

@@ -1,0 +1,20 @@
+InfluxDB is ready.
+
+Consider using secrets!
+
+system: storage
+provider: influxdb
+address: http://{{ template "influxdb.name" . }}.{{ .Values.general.namespace }}.svc.{{ .Values.inbound.clusterNS }}:{{ .Values.inbound.port }}
+{{- if .Values.user.login  }}
+username: {{ .Values.user.login }}
+{{- else }}
+username: check your secret "{{ .Values.general.namespace }}/{{ template "influxdb.name" . }}"
+{{- end }}
+{{- if .Values.user.password  }}
+password: {{ .Values.user.password }}
+{{- else }}
+password: check your secret "{{ .Values.general.namespace }}/{{ template "influxdb.name" . }}"
+{{- end }}
+database: {{ .Values.db.name }}
+batchSize: 50
+storeHeartbeat: true

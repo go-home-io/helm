@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata: 
+  name: {{ template "influxdb.name" . }}
+  namespace: {{ .Values.general.namespace }}
+  labels: 
+    app: {{ template "influxdb.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name | quote }}
+spec:
+  type: {{ .Values.inbound.type }}
+  selector: 
+    app: {{ template "influxdb.name" . }}
+    release: {{ .Release.Name }}
+  ports: 
+    - name: api
+      port: {{ .Values.inbound.port }}
+      targetPort: api

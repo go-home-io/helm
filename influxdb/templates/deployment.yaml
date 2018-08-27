@@ -1,0 +1,83 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: 
+  name: {{ template "influxdb.name" . }}
+  namespace: {{ .Values.general.namespace }}
+  labels: 
+    app: {{ template "influxdb.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name | quote }}
+spec: 
+  replicas: 1
+  template:
+    metadata: 
+      labels:
+        app: {{ template "influxdb.name" . }}
+        release: {{ .Release.Name }}
+    spec: 
+      volumes: 
+        - name: config
+          configMap: 
+            name: {{ template "influxdb.name" . }}
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ template "influxdb.name" . }}
+      containers: 
+        - name: {{ template "influxdb.name" . }}
+        {{- if .Values.docker.isArm }}
+          image: {{ .Values.docker.imageArm }}
+        {{- else }}
+          image: {{ .Values.docker.imageAmd }}
+        {{- end }}
+          imagePullPolicy: {{ .Values.docker.pullPolicy }}
+          resources: 
+            requests: 
+              cpu: {{ .Values.resources.cpu.requests | quote }}
+              memory: {{ .Values.resources.memory.requests | quote }}
+            limits: 
+              cpu: {{ .Values.resources.cpu.limits | quote }}
+              memory: {{ .Values.resources.memory.limits | quote }}
+          ports: 
+            - name: api
+              containerPort: {{ .Values.inbound.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: api
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: api
+            initialDelaySeconds: 5
+            timeoutSeconds: 2
+          volumeMounts:
+            - name: config
+              mountPath: /etc/influxdb
+            - name: data
+              mountPath: /var/lib/influxdb/data
+          env: 
+            - name: INFLUXDB_ADMIN_USER
+              valueFrom: 
+                secretKeyRef:
+                  name: {{ template "influxdb.name" . }}
+                  key: influxdb-admin
+            - name: INFLUXDB_ADMIN_PASSWORD
+              valueFrom: 
+                secretKeyRef:
+                  name: {{ template "influxdb.name" . }}
+                  key: influxdb-admin-password
+            - name: INFLUXDB_USER
+              valueFrom: 
+                secretKeyRef:
+                  name: {{ template "influxdb.name" . }}
+                  key: influxdb-user
+            - name: INFLUXDB_USER_PASSWORD
+              valueFrom: 
+                secretKeyRef:
+                  name: {{ template "influxdb.name" . }}
+                  key: influxdb-password
+            - name: INFLUXDB_DB
+              value: {{ .Values.db.name | quote }}

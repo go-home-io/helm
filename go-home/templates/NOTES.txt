@@ -22,5 +22,5 @@ port: {{ .Values.inbound.master }}
 ---
 
 {{- if .Values.serviceBusConfig }}
-{{ toYaml .Values.serviceBusConfig | trimSuffix "\n" | nindent 4 }}
+{{ toYaml .Values.serviceBusConfig | trimSuffix "\n" }}
 {{- end }}
