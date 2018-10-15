@@ -1,10 +1,10 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata: 
-  name: {{ template "nsqd.name" . }}
+  name: {{ template "proxy.name" . }}
   namespace: {{ .Values.general.namespace }}
   labels: 
-    app: {{ template "nsqd.name" . }}
+    app: {{ template "proxy.name" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: {{ .Release.Name | quote }}
 spec: 
@@ -12,11 +12,15 @@ spec:
   template:
     metadata: 
       labels:
-        app: {{ template "nsqd.name" . }}
+        app: {{ template "proxy.name" . }}
         release: {{ .Release.Name }}
     spec: 
+      volumes: 
+        - name: plugins
+          persistentVolumeClaim: 
+            claimName: {{ .Values.sharedStorage }}
       containers: 
-        - name: {{ template "nsqd.name" . }}
+        - name: {{ template "proxy.name" . }}
           image: {{ .Values.docker.image }}:{{ .Values.docker.tag }}
           imagePullPolicy: {{ .Values.docker.pullPolicy }}
           resources: 
@@ -28,26 +32,18 @@ spec:
               memory: {{ .Values.resources.memory.limits | quote }}
           ports: 
             - name: http
-              containerPort: {{ .Values.inbound.http }}
+              containerPort: 9090
               protocol: TCP
-            - name: tcp
-              containerPort: {{ .Values.inbound.tcp }}
-              protocol: TCP
-          readinessProbe: 
-            httpGet: 
-              path: /ping
+          livenessProbe:
+            tcpSocket:
               port: http
-            initialDelaySeconds: 10
-          livenessProbe: 
-            httpGet: 
-              path: /ping
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+          readinessProbe:
+            tcpSocket:
               port: http
-            initialDelaySeconds: 10
-            periodSeconds: 10
+            initialDelaySeconds: 5
             timeoutSeconds: 2
-          command: 
-            - nsqd
-          args: 
-            - "--http-address=0.0.0.0:{{ .Values.inbound.http }}"
-            - "--tcp-address=0.0.0.0:{{ .Values.inbound.tcp }}"
-            - "--broadcast-address={{ template "nsqd.name" . }}.{{ .Values.general.namespace }}.svc.{{ .Values.inbound.clusterNS }}"
+          volumeMounts:
+            - name: plugins
+              mountPath: /plugins

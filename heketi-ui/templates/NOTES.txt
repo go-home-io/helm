@@ -1,0 +1,11 @@
+Heketi Dashboard is ready.
+
+{{- if and .Values.inbound.enabled .Values.inbound.host }}
+Your installation url is:
+
+{{ .Values.inbound.host }}
+{{- end }}
+
+To access within the cluster use: 
+
+http://{{ template "heketi.name" . }}.{{ .Values.general.namespace }}.svc.YOUR_CLUSTER_NAMESPACE

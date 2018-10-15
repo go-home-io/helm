@@ -1,0 +1,8 @@
+name: bintray-proxy
+version: 1.0.3
+description: go-home bintray proxy
+keywords:
+  - go-home
+  - infra
+maintainers:
+  - name: go-home

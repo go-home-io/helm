@@ -1,0 +1,7 @@
+name: opensky
+version: 1.0.0
+description: OpenSky network feeder
+keywords:
+  - 3rdparty
+maintainers:
+  - name: go-home

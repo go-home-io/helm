@@ -10,7 +10,6 @@ db:
 inbound: 
   port: 8086
   type: ClusterIP
-  clusterNS: cluster.local
 
 docker: 
   isArm: true

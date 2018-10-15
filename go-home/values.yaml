@@ -6,7 +6,7 @@ general:
 
 docker: 
   image: gohomeio/server
-  tag: 0.0.3
+  tag: 0.0.11
   pullPolicy: IfNotPresent
 
 resources: 
@@ -21,21 +21,31 @@ inbound:
   http: 8080
 
 serviceBusConfig: {}
+loggerConfig: {}
 workersProperties: {}
-staticWorkerProperties: {}
 users: {}
 
-staticWorker: 
+static: 
+  - nodeSelector:
+      static: true
+    mountDevices: false
+    properties: {}
+    # will be exposed as host port
+    ports: 
+      - 5000
+    service:
+      enabled: true
+      type: LoadBalancer
+      loadBalancerIP:
+
+bintrayProxy: 
   enabled: false
-  nodeSelector:
-    static: true
+  url:
 
 inbound:
-  static: 
-    - 5000
-  type: LoadBalancer
   master: 8000
   host: ""
   ingressAnnotations: 
+    kubernetes.io/ingress.class: traefik
     traefik.ingress.kubernetes.io/redirect-entry-point: https
     traefik.ingress.kubernetes.io/redirect-permanent: true

@@ -1,0 +1,34 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: 
+  name: {{ template "chrome.name" . }}
+  namespace: {{ .Values.general.namespace }}
+  labels: 
+    app: {{ template "chrome.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name | quote }}
+spec: 
+  replicas: 1
+  template:
+    metadata: 
+      labels:
+        app: {{ template "chrome.name" . }}
+        release: {{ .Release.Name }}
+    spec: 
+      containers: 
+        - name: {{ template "chrome.name" . }}
+          securityContext:
+            privileged: true
+          image: {{ .Values.docker.image }}:{{ .Values.docker.tag }}
+          imagePullPolicy: {{ .Values.docker.pullPolicy }}
+          resources: 
+            requests: 
+              cpu: {{ .Values.resources.cpu.requests | quote }}
+              memory: {{ .Values.resources.memory.requests | quote }}
+            limits: 
+              cpu: {{ .Values.resources.cpu.limits | quote }}
+              memory: {{ .Values.resources.memory.limits | quote }}
+          ports:
+            - containerPort: 9222
+              protocol: TCP
+              name: debug-rc

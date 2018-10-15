@@ -28,4 +28,13 @@ data:
     cd $HOME_DIR
     name=$(hostname)
     sed -i s/workerName/${name}/ configs/config.yaml
-    ./go-home -w -c location:$HOME_DIR/configs -s provider:k8s -s secret:{{ .Values.general.namespace }}/{{ template "go-home.name" . }} --plugins=/plugins
+    ./go-home -w \
+      -c location:$HOME_DIR/configs \
+      -s provider:k8s \
+      -s secret:{{ .Values.general.namespace }}/{{ template "go-home.name" . }} \
+      {{- if .Values.bintrayProxy.enabled }}
+      --plugins=/plugins \
+      --pluginsProxy={{ .Values.bintrayProxy.url }}
+      {{- else }}
+      --plugins=/plugins
+      {{- end }}

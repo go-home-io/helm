@@ -1,0 +1,5 @@
+Bintray proxy is ready. 
+
+Add the following startup option to your go-home instances: 
+
+--pluginsProxy=http://{{ template "proxy.name" . }}.{{ .Values.general.namespace }}.svc.YOUR_CLUSTER_NAMESPACE:{{ .Values.inbound.port }}

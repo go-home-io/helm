@@ -4,13 +4,6 @@ Assuming you're using MetalLB, to get an IP of static worker run:
 
 IP=$(kubectl get svc {{ template "go-home.worker.static.name" . }} -n {{ .Values.general.namespace }} | awk -F ' ' 'NR==2{ print $4 }') && echo $IP
 
-Use the following configuration to assign devices to the static worker: 
-workerSelectors:
-	name: worker-static
-    {{- range $key, $val := .Values.staticWorkerProperties }}
-    {{ $key }}: {{ $val }}
-    {{- end }}
-
 ====================
 
 Add the following config to the {{ .Values.general.masterConfigMap }} config map: 

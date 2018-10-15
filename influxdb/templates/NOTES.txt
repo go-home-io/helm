@@ -4,7 +4,7 @@ Consider using secrets!
 
 system: storage
 provider: influxdb
-address: http://{{ template "influxdb.name" . }}.{{ .Values.general.namespace }}.svc.{{ .Values.inbound.clusterNS }}:{{ .Values.inbound.port }}
+address: http://{{ template "influxdb.name" . }}.{{ .Values.general.namespace }}.svc.YOUR_CLUSTER_NAMESPACE:{{ .Values.inbound.port }}
 {{- if .Values.user.login  }}
 username: {{ .Values.user.login }}
 {{- else }}

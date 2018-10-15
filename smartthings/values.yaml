@@ -33,3 +33,4 @@ resources:
 inbound:
   port: 8081
   type: LoadBalancer
+  loadBalancerIP: 

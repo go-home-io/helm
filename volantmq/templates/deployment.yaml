@@ -33,11 +33,9 @@ spec:
           ports: 
             - name: http
               containerPort: {{ .Values.inbound.http }}
-              hostPort: {{ .Values.inbound.http }}
               protocol: TCP
             - name: mqtt
               containerPort: {{ .Values.inbound.mqtt }}
-              hostPort: {{ .Values.inbound.mqtt }}
               protocol: TCP
           readinessProbe: 
             httpGet: 

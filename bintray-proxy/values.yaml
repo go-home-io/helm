@@ -1,0 +1,23 @@
+nameOverride: ""
+
+general: 
+  namespace: default
+
+sharedStorage: gh-go-home
+
+inbound: 
+  port: 9090
+  type: ClusterIP
+
+docker: 
+  image: docker.io/gohomeio/bintray-proxy
+  tag: 1.0.3
+  pullPolicy: IfNotPresent
+
+resources: 
+  cpu: 
+    requests: 100m
+    limits: 100m
+  memory: 
+    requests: 50Mi
+    limits: 100Mi

@@ -48,4 +48,7 @@ spec:
             - "/bin/sh"
           args: 
             - "-c"
-            - "cp /config/start.sh /start.sh && chmod +x /start.sh && /start.sh"
+            - |
+              cp /config/start.sh /start.sh && \
+              chmod +x /start.sh && \
+              /start.sh

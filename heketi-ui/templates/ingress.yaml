@@ -1,10 +1,12 @@
+{{- if .Values.inbound.enabled }}
+
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ template "go-home.master.name" . }}
+  name: {{ template "heketi.name" . }}
   namespace: {{ .Values.general.namespace }}
   labels: 
-    app: {{ template "go-home.master.name" . }}
+    app: {{ template "heketi.name" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: {{ .Release.Name | quote }}
   annotations:
@@ -16,8 +18,10 @@ spec:
     - http: 
         paths: 
           - backend: 
-              serviceName: {{ template "go-home.master.name" . }}
+              serviceName: {{ template "heketi.name" . }}
               servicePort: 80
       {{- if .Values.inbound.host }}
       host: {{ .Values.inbound.host }}
       {{- end }}
+
+{{- end }}

@@ -1,48 +1,64 @@
-{{- if .Values.staticWorker.enabled }}
+{{- $rootNode := . }}
+{{- $root := $rootNode.Values }}
+{{- range $index, $worker := .Values.static }}
 
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata: 
-  name: {{ template "go-home.worker.static.name" . }}
-  namespace: {{ .Values.general.namespace }}
+  name: {{ template "go-home.worker.static.name" $rootNode }}-{{ $index }}
+  namespace: {{ $root.general.namespace }}
   labels: 
-    app: {{ template "go-home.worker.static.name" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    release: {{ .Release.Name | quote }}
+    app: {{ template "go-home.worker.static.name" $rootNode }}
+    chart: "{{ $rootNode.Chart.Name }}-{{ $rootNode.Chart.Version }}"
+    release: {{ $rootNode.Release.Name | quote }}
+    worker: static-{{ $index }}
 spec: 
   replicas: 1
   template:
     metadata: 
       labels:
-        app: {{ template "go-home.worker.static.name" . }}
-        release: {{ .Release.Name }}
+        app: {{ template "go-home.worker.static.name" $rootNode }}
+        release: {{ $rootNode.Release.Name }}
+        worker: static-{{ $index }}
     spec: 
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
-{{- if .Values.general.rbacEnabled }}
-      serviceAccountName: {{ template "go-home.name" . }}
+{{- if $root.general.rbacEnabled }}
+      serviceAccountName: {{ template "go-home.name" $rootNode }}
 {{- end }}
       nodeSelector:
-        {{- range $key, $val := .Values.staticWorker.nodeSelector }}
+        {{- range $key, $val := $worker.nodeSelector }}
         {{ $key }}: {{ $val | quote }}
         {{- end }}
       volumes: 
         - name: plugins
           persistentVolumeClaim:
-            claimName: {{ template "go-home.name" . }}
+            claimName: {{ template "go-home.name" $rootNode }}
+        - name: config
+          configMap: 
+            name: {{ template "go-home.worker.static.name" $rootNode }}
+{{- if $worker.mountDevices }}
+        - name: dev
+          hostPath: 
+            path: /dev
+{{- end }}
       containers: 
-        - name: {{ template "go-home.worker.static.name" . }}
-          image: {{ .Values.docker.image }}:{{ .Values.docker.tag }}
-          imagePullPolicy: {{ .Values.docker.pullPolicy }}
+        - name: {{ template "go-home.worker.static.name" $rootNode }}-{{ $index }}
+          image: {{ $root.docker.image }}:{{ $root.docker.tag }}
+          imagePullPolicy: {{ $root.docker.pullPolicy }}
+{{- if $worker.mountDevices }}
+          securityContext:
+            privileged: true
+{{- end }}
           resources: 
             requests: 
-              cpu: {{ .Values.resources.cpu.requests | quote }}
-              memory: {{ .Values.resources.memory.requests | quote }}
+              cpu: {{ $root.resources.cpu.requests | quote }}
+              memory: {{ $root.resources.memory.requests | quote }}
             limits: 
-              cpu: {{ .Values.resources.cpu.limits | quote }}
-              memory: {{ .Values.resources.memory.limits | quote }}
+              cpu: {{ $root.resources.cpu.limits | quote }}
+              memory: {{ $root.resources.memory.limits | quote }}
           ports:
-          {{- range .Values.inbound.static }}
+          {{- range $worker.ports }}
             - containerPort: {{ . }}
               hostPort: {{ . }}
               protocol: TCP
@@ -50,16 +66,31 @@ spec:
           volumeMounts: 
             - name: plugins
               mountPath: /plugins
+            - name: config
+              mountPath: /config
+{{- if $worker.mountDevices }}
+            - name: dev
+              mountPath: /dev
+{{- end }}
           command: 
             - /bin/sh
           args:
             - "-c"
             - |
-              /go-home/go-home -w \
-              -c provider:k8s \
-              -c config-map:{{ .Values.general.namespace }}/{{ template "go-home.worker.static.name" . }} \
+              mkdir -p $HOME_DIR/configs && \
+              cp -f /config/config-{{ $index }}.yaml $HOME_DIR/configs/ && \
+              cd $HOME_DIR && \
+              ./go-home -w \
+              -c location:$HOME_DIR/configs \
               -s provider:k8s \
-              -s secret:{{ .Values.general.namespace }}/{{ template "go-home.name" . }} \
+              -s secret:{{ $root.general.namespace }}/{{ template "go-home.name" $rootNode }} \
+              {{- if $root.bintrayProxy.enabled }}
+              --plugins=/plugins \
+              --pluginsProxy={{ $root.bintrayProxy.url }}
+              {{- else }}
               --plugins=/plugins
+              {{- end }}
+
+---
 
 {{- end }}

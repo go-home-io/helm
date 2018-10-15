@@ -1,0 +1,13 @@
+OpenSky is ready, to access your feader stream, use this url: 
+
+https://opensky-network.org/receiver-profile?s={{ .Values.opensky.serial }}
+
+{{- if and .Values.inbound.enabled .Values.inbound.host }}
+Your installation url is:
+
+{{ .Values.inbound.host }}
+{{- end }}
+
+To access within the cluster use: 
+
+http://{{ template "opensky.name" . }}.{{ .Values.general.namespace }}.svc.YOUR_CLUSTER_NAMESPACE

@@ -45,13 +45,13 @@ spec:
             httpGet:
               path: /ping
               port: api
-            initialDelaySeconds: 30
+            initialDelaySeconds: 60
             timeoutSeconds: 5
           readinessProbe:
             httpGet:
               path: /ping
               port: api
-            initialDelaySeconds: 5
+            initialDelaySeconds: 60
             timeoutSeconds: 2
           volumeMounts:
             - name: config

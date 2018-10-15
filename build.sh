@@ -2,6 +2,7 @@
 
 set -e 
 
+skip_push=$1
 
 img_build=
 img_run=
@@ -16,7 +17,7 @@ GOARCH=
 VERSION=ChangeMe
 
 PS3='Select image:'
-options=("nsq" "volantmq" "smartthings" "Quit")
+options=("nsq" "volantmq" "smartthings" "opensky" "heketi-ui" "chrome" "bintray-proxy" "Quit")
 select opt in "${options[@]}"
 do 
 	targe_dir=$opt
@@ -45,6 +46,37 @@ do
 			VERSION=1.0.0
 		break
 		;;
+		"opensky")
+			img_build=(debian:jessie 
+				arm32v7/debian:jessie)
+			img_run=(debian:jessie-slim
+				arm32v7/debian:jessie-slim)
+			VERSION=1.0.0
+		break
+		;;
+		"heketi-ui")
+			img_build=(nil nil)
+			img_run=(node:10.11.0-alpine
+				arm32v6/node:10.11.0-alpine)
+			VERSION=1.0.0		
+		break
+		;;
+		"chrome")
+			img_build=(nil nil)
+			img_run=(debian:stretch
+				arm32v7/debian:stretch)
+			VERSION=1.0.0
+		break
+		;;
+		"bintray-proxy")
+			echo "WARNING: arm must be built on actual arm"
+			img_build=(golang:1.11.0-alpine3.8 
+				arm32v6/golang:1.11.0-alpine3.8)
+			img_run=(alpine:3.8 
+				arm32v6/alpine:3.8)
+			VERSION=1.0.3
+		break
+		;;
 		"Quit")
 			exit 0
 		;;
@@ -56,6 +88,8 @@ do
 done
 
 IMG_NAME=gohomeio/${IMG_NAME}
+
+echo "Curent version is ${VERSION}, concider increasing"
 
 PS3='Select operation:'
 options=("amd64" "arm32v6" "manifest" "Quit")
@@ -97,4 +131,7 @@ done
 cd ${targe_dir}/docker
 docker build --no-cache -t $IMG_NAME:$ARCH-${VERSION} --build-arg BUILD_IMAGE=${BUILD_IMAGE} \
 	--build-arg RUN_IMAGE=${RUN_IMAGE} --build-arg GOARCH=${GOARCH} .
-docker push $IMG_NAME:$ARCH-${VERSION}
+
+if [ "${skip_push}" != "true" ]; then
+	docker push $IMG_NAME:$ARCH-${VERSION}
+fi;

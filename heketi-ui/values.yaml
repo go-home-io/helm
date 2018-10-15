@@ -1,0 +1,32 @@
+nameOverride: ""
+
+general: 
+  namespace: default
+
+heketi: 
+  server: 
+  username: admin
+  password: "My Secret"
+
+docker: 
+  image: gohomeio/heketi-ui
+  tag: 1.0.0
+  pullPolicy: IfNotPresent
+
+resources: 
+  cpu: 
+    requests: 100m
+    limits: 200m
+  memory: 
+    requests: 50Mi
+    limits: 100Mi
+
+inbound: 
+  enabled: false
+  host:
+  ingressAnnotations: 
+    kubernetes.io/ingress.class: traefik
+    ingress.kubernetes.io/auth-type: "basic"
+    ingress.kubernetes.io/auth-secret: "k8s-auth"
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanent: true

@@ -1,0 +1,7 @@
+name: chrome
+version: 1.0.0
+description: Headless chrome
+keywords:
+  - 3rdparty
+maintainers:
+  - name: go-home

@@ -40,7 +40,6 @@ spec:
           ports: 
             - name: inb
               containerPort: {{ .Values.inbound.port }}
-              hostPort: {{ .Values.inbound.port }}
               protocol: TCP
           readinessProbe: 
             tcpSocket: 

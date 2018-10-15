@@ -9,6 +9,8 @@ metadata:
     release: {{ .Release.Name | quote }}
 spec: 
   replicas: 1
+  strategy:
+    type: Recreate
   template:
     metadata: 
       labels:
@@ -36,7 +38,6 @@ spec:
           ports:
             - name: http
               containerPort: {{ .Values.inbound.master }}
-              hostPort: {{ .Values.inbound.master }}
               protocol: TCP
           volumeMounts: 
             - name: plugins
@@ -51,4 +52,9 @@ spec:
               -c config-map:{{ .Values.general.namespace }}/{{ .Values.general.masterConfigMap }} \
               -s provider:k8s \
               -s secret:{{ .Values.general.namespace }}/{{ template "go-home.name" . }} \
+              {{- if .Values.bintrayProxy.enabled }}
+              --plugins=/plugins \
+              --pluginsProxy={{ .Values.bintrayProxy.url }}
+              {{- else }}
               --plugins=/plugins
+              {{- end }}

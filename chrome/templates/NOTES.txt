@@ -1,0 +1,4 @@
+Chrome is ready, to access it use:
+
+chromeAddress: {{ template "chrome.name" . }}.{{ .Values.general.namespace }}.svc.YOUR_CLUSTER_NAMESPACE
+chromePort: 80

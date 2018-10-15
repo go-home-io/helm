@@ -1,10 +1,10 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata: 
-  name: {{ template "nsqd.name" . }}
+  name: {{ template "heketi.name" . }}
   namespace: {{ .Values.general.namespace }}
   labels: 
-    app: {{ template "nsqd.name" . }}
+    app: {{ template "heketi.name" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: {{ .Release.Name | quote }}
 spec: 
@@ -12,11 +12,13 @@ spec:
   template:
     metadata: 
       labels:
-        app: {{ template "nsqd.name" . }}
+        app: {{ template "heketi.name" . }}
         release: {{ .Release.Name }}
     spec: 
       containers: 
-        - name: {{ template "nsqd.name" . }}
+        - name: {{ template "heketi.name" . }}
+          securityContext:
+            privileged: true
           image: {{ .Values.docker.image }}:{{ .Values.docker.tag }}
           imagePullPolicy: {{ .Values.docker.pullPolicy }}
           resources: 
@@ -26,28 +28,24 @@ spec:
             limits: 
               cpu: {{ .Values.resources.cpu.limits | quote }}
               memory: {{ .Values.resources.memory.limits | quote }}
-          ports: 
-            - name: http
-              containerPort: {{ .Values.inbound.http }}
+          ports:
+            - containerPort: 3000
               protocol: TCP
-            - name: tcp
-              containerPort: {{ .Values.inbound.tcp }}
-              protocol: TCP
+              name: http
           readinessProbe: 
-            httpGet: 
-              path: /ping
+            tcpSocket: 
               port: http
-            initialDelaySeconds: 10
+            initialDelaySeconds: 20
           livenessProbe: 
-            httpGet: 
-              path: /ping
+            tcpSocket: 
               port: http
-            initialDelaySeconds: 10
+            initialDelaySeconds: 20
             periodSeconds: 10
             timeoutSeconds: 2
-          command: 
-            - nsqd
-          args: 
-            - "--http-address=0.0.0.0:{{ .Values.inbound.http }}"
-            - "--tcp-address=0.0.0.0:{{ .Values.inbound.tcp }}"
-            - "--broadcast-address={{ template "nsqd.name" . }}.{{ .Values.general.namespace }}.svc.{{ .Values.inbound.clusterNS }}"
+          env: 
+            - name: HEKETI_SERVER_URL
+              value: {{ .Values.heketi.server | quote }}
+            - name: HEKETI_SERVER_USER
+              value: {{ .Values.heketi.username | quote }}
+            - name: HEKETI_SERVER_SECRET
+              value: {{ .Values.heketi.password | quote }}

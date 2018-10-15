@@ -9,6 +9,9 @@ metadata:
     release: {{ .Release.Name | quote }}
 spec:
   type: {{ .Values.inbound.type }}
+  {{- if .Values.inbound.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.inbound.loadBalancerIP }}
+  {{- end }}
   selector: 
     app: {{ template "smartthings.name" . }}
     release: {{ .Release.Name }}

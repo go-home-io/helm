@@ -1,18 +1,18 @@
 apiVersion: v1
 kind: Service
 metadata: 
-  name: {{ template "go-home.master.name" . }}
+  name: {{ template "proxy.name" . }}
   namespace: {{ .Values.general.namespace }}
   labels: 
-    app: {{ template "go-home.master.name" . }}
+    app: {{ template "proxy.name" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: {{ .Release.Name | quote }}
 spec:
-  type: ClusterIP
+  type: {{ .Values.inbound.type }}
   selector: 
-    app: {{ template "go-home.master.name" . }}
+    app: {{ template "proxy.name" . }}
     release: {{ .Release.Name }}
   ports: 
-    - port: 80
+    - name: http
+      port: {{ .Values.inbound.port }}
       targetPort: http
-      name: http

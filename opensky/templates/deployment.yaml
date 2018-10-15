@@ -1,0 +1,68 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: 
+  name: {{ template "opensky.name" . }}
+  namespace: {{ .Values.general.namespace }}
+  labels: 
+    app: {{ template "opensky.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name | quote }}
+spec: 
+  replicas: 1
+  template:
+    metadata: 
+      labels:
+        app: {{ template "opensky.name" . }}
+        release: {{ .Release.Name }}
+    spec: 
+      nodeSelector:
+        {{- range $key, $val := .Values.general.nodeSelector }}
+        {{ $key }}: {{ $val | quote }}
+        {{- end }}
+      volumes: 
+        - name: usb
+          hostPath:
+            path: /dev/bus/usb
+      containers: 
+        - name: {{ template "opensky.name" . }}
+          securityContext:
+            privileged: true
+          image: {{ .Values.docker.image }}:{{ .Values.docker.tag }}
+          imagePullPolicy: {{ .Values.docker.pullPolicy }}
+          resources: 
+            requests: 
+              cpu: {{ .Values.resources.cpu.requests | quote }}
+              memory: {{ .Values.resources.memory.requests | quote }}
+            limits: 
+              cpu: {{ .Values.resources.cpu.limits | quote }}
+              memory: {{ .Values.resources.memory.limits | quote }}
+          ports:
+            - containerPort: 80
+              protocol: TCP
+              name: http
+          volumeMounts: 
+            - name: usb
+              mountPath: /dev/bus/usb
+          livenessProbe: 
+            exec: 
+              command: 
+                - /health.sh
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          readinessProbe: 
+            exec: 
+              command: 
+                - /health.sh
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          env: 
+            - name: LAT
+              value: {{ .Values.opensky.lat | quote }}
+            - name: LON
+              value: {{ .Values.opensky.lon | quote }}
+            - name: ALT
+              value: {{ .Values.opensky.alt | quote }}
+            - name: SERIAL
+              value: {{ .Values.opensky.serial | quote }}
+            - name: OPENSKY_USER
+              value: {{ .Values.opensky.user | quote }}

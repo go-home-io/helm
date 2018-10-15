@@ -4,19 +4,14 @@ general:
   namespace: default
 
 docker: 
-  image: gohomeio/nsq
+  image: gohomeio/chrome
   tag: 1.0.0
   pullPolicy: IfNotPresent
 
 resources: 
   cpu: 
-    requests: 300m
-    limits: 400m
+    requests: 100m
+    limits: 600m
   memory: 
     requests: 100Mi
-    limits: 200Mi
-
-inbound: 
-  clusterNS: cluster.local
-  tcp: 4150
-  http: 4151
+    limits: 500Mi

@@ -1,0 +1,34 @@
+{{- $rootNode := . }}
+{{- $root := $rootNode.Values }}
+{{- range $index, $worker := .Values.static }}
+{{- if $worker.service.enabled }}
+
+apiVersion: v1
+kind: Service
+metadata: 
+  name: {{ template "go-home.worker.static.name" $rootNode }}-{{ $index }}
+  namespace: {{ $root.general.namespace }}
+  labels: 
+    app: {{ template "go-home.worker.static.name" $rootNode }}
+    chart: "{{ $rootNode.Chart.Name }}-{{ $rootNode.Chart.Version }}"
+    release: {{ $rootNode.Release.Name | quote }}
+    worker: static-{{ $index }}
+spec:
+  type: {{ $worker.service.type }}
+  {{- if $worker.service.loadBalancerIP }}
+  loadBalancerIP: {{ $worker.service.loadBalancerIP }}
+  {{- end }}
+  selector: 
+    app: {{ template "go-home.worker.static.name" $rootNode }}
+    release: {{ $rootNode.Release.Name }}
+    worker: static-{{ $index }}
+  ports: 
+  {{- range $worker.ports }}
+    - port: {{ . }}
+      targetPort: {{ . }}
+  {{- end }}
+
+---
+
+{{- end }}
+{{- end }}
