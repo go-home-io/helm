@@ -1,9 +1,9 @@
 apiVersion: v1
 entries:
   bintray-proxy:
-  - created: 2018-10-15T04:23:31.396133991Z
+  - created: 2019-08-20T19:33:32.517908773Z
     description: go-home bintray proxy
-    digest: b0c25642083bcfb4d119121104c92b0f2698b611af8943f05884dee66e92f575
+    digest: ba6b2df51dba6043dc848a04b39c47ca85ee8f4ab6598790950c1660602a836b
     keywords:
     - go-home
     - infra
@@ -14,7 +14,7 @@ entries:
     - https://apps.go-home.io/bintray-proxy-1.0.3.tgz
     version: 1.0.3
   chrome:
-  - created: 2018-10-15T04:23:31.396463075Z
+  - created: 2019-08-20T19:33:32.518383438Z
     description: Headless chrome
     digest: 4e83cd57afcef001860e244623974e8c7e55e49d23fd951e774502ab6f639d52
     keywords:
@@ -26,7 +26,7 @@ entries:
     - https://apps.go-home.io/chrome-1.0.0.tgz
     version: 1.0.0
   go-home:
-  - created: 2018-10-15T04:23:31.397588321Z
+  - created: 2019-08-20T19:33:32.51986425Z
     description: go-home server
     digest: ce75d65a94ddcd52cb9d682723e42e4d7621fef140a66b5e7de645f4b0075a41
     keywords:
@@ -37,7 +37,7 @@ entries:
     urls:
     - https://apps.go-home.io/go-home-0.0.11.tgz
     version: 0.0.11
-  - created: 2018-10-15T04:23:31.397016238Z
+  - created: 2019-08-20T19:33:32.519112153Z
     description: go-home server
     digest: 43fb99fe91e37cd16de3d3d01904dfed79462cb8eb83a75ffb8ac1fabc0b6aa0
     keywords:
@@ -49,7 +49,7 @@ entries:
     - https://apps.go-home.io/go-home-0.0.1.tgz
     version: 0.0.1
   heketi-ui:
-  - created: 2018-10-15T04:23:31.397953872Z
+  - created: 2019-08-20T19:33:32.520338139Z
     description: Dashboard for Heketi server
     digest: 5fadc25cb46e613aba064adac6e84c8465871df7c0c2f778b630ba85c3c0b59b
     keywords:
@@ -61,7 +61,18 @@ entries:
     - https://apps.go-home.io/heketi-ui-1.0.0.tgz
     version: 1.0.0
   influxdb:
-  - created: 2018-10-15T04:23:31.398654326Z
+  - created: 2019-08-20T19:33:32.521732079Z
+    description: InfluxDB database
+    digest: 7b9b2066382f92df53d75d3231c67123c5b19ce7a37a35043d5ad8baca9eb0e3
+    keywords:
+    - storage
+    maintainers:
+    - name: go-home
+    name: influxdb
+    urls:
+    - https://apps.go-home.io/influxdb-1.1.0.tgz
+    version: 1.1.0
+  - created: 2019-08-20T19:33:32.521157609Z
     description: InfluxDB database
     digest: 849e948aff42c546f8d423a3e45f15654d372c32373a1977235c0e068d7c298c
     keywords:
@@ -73,7 +84,18 @@ entries:
     - https://apps.go-home.io/influxdb-1.0.0.tgz
     version: 1.0.0
   nsq:
-  - created: 2018-10-15T04:23:31.398926306Z
+  - created: 2019-08-20T19:33:32.522766354Z
+    description: NSQ service bus
+    digest: e1fc5f79a689173a8617df6bedfd0c2e3d47cc51c2207bc48042587a0f85eff1
+    keywords:
+    - infra
+    maintainers:
+    - name: go-home
+    name: nsq
+    urls:
+    - https://apps.go-home.io/nsq-1.1.0.tgz
+    version: 1.1.0
+  - created: 2019-08-20T19:33:32.522344583Z
     description: NSQ service bus
     digest: c827be2adfa12d82af281467ef14e35032b6451974f3aab3cafcfd7a06864f63
     keywords:
@@ -85,7 +107,7 @@ entries:
     - https://apps.go-home.io/nsq-1.0.0.tgz
     version: 1.0.0
   opensky:
-  - created: 2018-10-15T04:23:31.399293336Z
+  - created: 2019-08-20T19:33:32.523065276Z
     description: OpenSky network feeder
     digest: 488a72675bc661dec8e091e366a0d92b87776ecc65c3f6e35cb205b14e914693
     keywords:
@@ -97,7 +119,18 @@ entries:
     - https://apps.go-home.io/opensky-1.0.0.tgz
     version: 1.0.0
   smartthings:
-  - created: 2018-10-15T04:23:31.399594677Z
+  - created: 2019-08-20T19:33:32.523561998Z
+    description: SmartThings connector
+    digest: 7fdac1a746acb142781ec1ecc4a1741233350d3361e426912296359d99044b20
+    keywords:
+    - samsung
+    maintainers:
+    - name: go-home
+    name: smartthings
+    urls:
+    - https://apps.go-home.io/smartthings-1.1.0.tgz
+    version: 1.1.0
+  - created: 2019-08-20T19:33:32.523315151Z
     description: SmartThings connector
     digest: 9a509d21cbde222a9aa24749284e9fd319c9916dce5ff2bcc8933feddc44c140
     keywords:
@@ -109,7 +142,18 @@ entries:
     - https://apps.go-home.io/smartthings-1.0.0.tgz
     version: 1.0.0
   volantmq:
-  - created: 2018-10-15T04:23:31.400222601Z
+  - created: 2019-08-20T19:33:32.52433012Z
+    description: VolantMQ MQTT broker
+    digest: 79b12065650b24a6d0904667f8eddb3be9e390ead28afb3f7b2c83a3a7ecb1dd
+    keywords:
+    - mqtt
+    maintainers:
+    - name: go-home
+    name: volantmq
+    urls:
+    - https://apps.go-home.io/volantmq-1.2.0.tgz
+    version: 1.2.0
+  - created: 2019-08-20T19:33:32.524064022Z
     description: VolantMQ MQTT broker
     digest: 9d7f905cda7e7077decdf41f765d67d05e3c12f2fe064a7eb3196c63a332ca23
     keywords:
@@ -120,7 +164,7 @@ entries:
     urls:
     - https://apps.go-home.io/volantmq-1.1.0.tgz
     version: 1.1.0
-  - created: 2018-10-15T04:23:31.399907642Z
+  - created: 2019-08-20T19:33:32.523830215Z
     description: VolantMQ MQTT broker
     digest: 27d9519b7715e8833a2c96842bbae802bdb9b54737c7b7b43c84d95d225acd98
     keywords:
@@ -131,4 +175,4 @@ entries:
     urls:
     - https://apps.go-home.io/volantmq-1.0.0.tgz
     version: 1.0.0
-generated: 2018-10-15T04:23:31.395468003Z
+generated: 2019-08-20T19:33:32.516727112Z
