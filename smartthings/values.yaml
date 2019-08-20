@@ -3,7 +3,6 @@ nameOverride: ""
 general: 
   namespace: default
   nodeSelector:
-    static: true
 
 docker: 
   image: gohomeio/smartthings
