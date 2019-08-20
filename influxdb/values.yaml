@@ -13,8 +13,8 @@ inbound:
 
 docker: 
   isArm: true
-  imageAmd: "influxdb:1.6.1-alpine"
-  imageArm: "arm32v7/influxdb:1.6.1"
+  imageAmd: "influxdb:1.7.7-alpine"
+  imageArm: "arm32v7/influxdb:1.7.7"
   pullPolicy: IfNotPresent
 
 user: 

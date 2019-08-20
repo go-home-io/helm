@@ -10,7 +10,7 @@ inbound:
   type: ClusterIP
 
 docker: 
-  image: docker.io/gohomeio/bintray-proxy
+  image: gohomeio/bintray-proxy
   tag: 1.0.3
   pullPolicy: IfNotPresent
 

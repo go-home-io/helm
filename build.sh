@@ -24,26 +24,26 @@ do
 	IMG_NAME=$opt
 	case $opt in 
 		"nsq")
-			img_build=(golang:1.10.3-alpine3.8 
-				arm32v6/golang:1.10.3-alpine3.8)
-			img_run=(alpine:3.8 
-				arm32v6/alpine:3.8)
-			VERSION=1.0.0
+			img_build=(golang:1.11.13-alpine3.9 
+				arm32v7/golang:1.11.13-alpine3.9)
+			img_run=(alpine:3.9 
+				arm32v7/alpine:3.9)
+			VERSION=1.1.0
 		break
 		;;
 		"volantmq")
-			img_build=(golang:1.10.3-alpine3.8 
-				arm32v6/golang:1.10.3-alpine3.8)
-			img_run=(alpine:3.8 
-				arm32v6/alpine:3.8)
-			VERSION=1.1.0
+			img_build=(golang:1.11.13-alpine3.9 
+				arm32v7/golang:1.11.13-alpine3.9)
+			img_run=(alpine:3.9 
+				arm32v7/alpine:3.9)
+			VERSION=1.2.0
 		break
 		;;
 		"smartthings")
 			img_build=(nil nil)
 			img_run=(node:10.7.0-alpine 
 				arm32v6/node:9.6.1-alpine)
-			VERSION=1.0.0
+			VERSION=1.1.0
 		break
 		;;
 		"opensky")

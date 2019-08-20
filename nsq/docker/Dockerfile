@@ -2,7 +2,7 @@ ARG BUILD_IMAGE
 ARG RUN_IMAGE
 FROM $BUILD_IMAGE AS build
 
-ENV COMMIT_HASH=8f3e47656ed54febe380486c0189c72af1bc9356
+ENV COMMIT_HASH=1db3903c4f9c0ca40a3ef35b89102f43dca30761
 
 ENV GOOS=linux
 
@@ -17,7 +17,7 @@ RUN apk update && apk add git make && \
 	git reset --hard $COMMIT_HASH && \
 	go get github.com/golang/dep/cmd/dep && \
 	${GOPATH}/bin/dep ensure && \
-	CGO_ENABLED=0 make DESTDIR=/opt PREFIX=/nsq GOFLAGS='-ldflags="-s -w"' install
+	CGO_ENABLED=0 make DESTDIR=/opt PREFIX=/nsq BLDFLAGS='-ldflags="-s -w"' install
 
 ##################################################################################################
 
